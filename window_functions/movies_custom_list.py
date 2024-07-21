@@ -94,8 +94,11 @@ df_movie_actor = load_movie_actor_from_json_file(spark, json_file_path='movie_ac
 
 selected_movie_ids = [177, 184]
 
-df_movies_selected = df_movies.filter(f.col("movie_id").isin(selected_movie_ids))
-df_movies_selected.show(10)
+df_movies_selected = (df_movies
+                      .filter(f.col("movie_id").isin(selected_movie_ids))
+                      .select("title")
+                      .withColumn("movie_rank", f.rank().over(Window.orderBy("title")))
+                      )
 
 df_related_genres = (df_movie_genre
                      .filter(f.col("movie_id").isin(selected_movie_ids))
@@ -106,4 +109,22 @@ df_related_genres = (df_movie_genre
                      .withColumn("genre_rank", f.rank().over(Window.orderBy("genre_name")))
                      )
 
-df_related_genres.show(10)
+df_related_actors = (df_movie_actor
+                     .filter(f.col("movie_id").isin(selected_movie_ids))
+                     .select("person_id")
+                     .dropDuplicates()
+                     .join(df_actors, "person_id")
+                     .select("person_name")
+                     .withColumn("actor_rank", f.rank().over(Window.orderBy("person_name")))
+                     )
+max_rank = max(df_movies_selected.count(), df_related_genres.count(), df_related_actors.count())
+df_result = (df_movies_selected
+             .join(df_related_genres, df_movies_selected["movie_rank"] == df_related_genres["genre_rank"], "full_outer")
+             .join(df_related_actors, df_related_genres["genre_rank"] == df_related_actors["actor_rank"], "full_outer")
+             .orderBy(f.coalesce(f.col("movie_rank"), f.lit(max_rank + 1)),
+                      f.coalesce(f.col("genre_rank"), f.lit(max_rank + 1)),
+                      f.coalesce(f.col("actor_rank"), f.lit(max_rank + 1)))
+             .select("title", "genre_name", "person_name")
+             )
+
+df_result.show(100)

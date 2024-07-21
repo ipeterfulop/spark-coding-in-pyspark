@@ -22,9 +22,9 @@ from movie_data_loader import *
 
 spark = SparkSession.builder.appName("FindingMovieGenres").getOrCreate()
 
-df_movies = load_movies_from_json_file(spark)
+df_movies = load_movies_from_json_file(spark, 'movie90s.json')
 df_genres = load_genres_from_json_file(spark)
-df_movie_genre = load_movie_genres_from_json_file(spark)
+df_movie_genre = load_movie_genres_from_json_file(spark, 'movie_genre_90s.json')
 
 join_type = "inner"
 join_expression = df_movies["movie_id"] == df_movie_genre["movie_id"]

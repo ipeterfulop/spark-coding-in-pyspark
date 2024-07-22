@@ -12,10 +12,14 @@ data_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data'
 sys.path.insert(0, data_path)
 from movie_data_loader import *
 
-spark = SparkSession.builder.appName("FindingMoviesWithNoGenre").getOrCreate()
+spark = SparkSession.builder \
+    .appName("FindingMoviesWithNoGenre") \
+    .getOrCreate()
 
-df_movies = load_movies_from_json_file(spark)
-df_movie_genre = load_movie_genres_from_json_file(spark)
+data_folder_url = 'https://raw.githubusercontent.com/ipeterfulop/spark-coding-in-pyspark/main/src/data/'
+
+df_movies = load_movies_from_json_file(spark, data_folder_url, 'movie90s.json')
+df_movie_genre = load_movie_genres_from_json_file(spark, data_folder_url, 'movie_genre_90s.json')
 
 join_expression = df_movies["movie_id"] == df_movie_genre["movie_id"]
 

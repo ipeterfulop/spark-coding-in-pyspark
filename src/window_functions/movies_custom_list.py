@@ -74,23 +74,27 @@ For a subset of movies with IDs 177 and 184, the output would look as follows:
 +---------------+----------+----------------------+
 """
 
-import sys
 import os
-from pyspark.sql import SparkSession
+import sys
+
 import pyspark.sql.functions as f
+from pyspark.sql import SparkSession
 from pyspark.sql.window import Window
 
 data_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data'))
 sys.path.insert(0, data_path)
 from movie_data_loader import *
 
-spark = SparkSession.builder.appName("MoviesCustomList").getOrCreate()
+spark = SparkSession.builder \
+    .appName("MoviesCustomList") \
+    .getOrCreate()
 
-df_movies = load_movies_from_json_file(spark, 'movie90s.json')
-df_genres = load_genres_from_json_file(spark)
-df_movie_genre = load_movie_genres_from_json_file(spark, 'movie_genre_90s.json')
-df_actors = load_actors_from_json_file(spark)
-df_movie_actor = load_movie_actor_from_json_file(spark, json_file_path='movie_actor_90s.json')
+data_folder_url = 'https://raw.githubusercontent.com/ipeterfulop/spark-coding-in-pyspark/main/src/data/'
+df_movies = load_movies_from_json_file(spark, data_folder_url, 'movie90s.json')
+df_genres = load_genres_from_json_file(spark, data_folder_url)
+df_movie_genre = load_movie_genres_from_json_file(spark, data_folder_url, 'movie_genre_90s.json')
+df_actors = load_actors_from_json_file(spark, data_folder_url)
+df_movie_actor = load_movie_actor_from_json_file(spark, data_folder_url, 'movie_actor_90s.json')
 
 selected_movie_ids = [177, 184]
 

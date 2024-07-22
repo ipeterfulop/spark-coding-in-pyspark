@@ -1,0 +1,12 @@
+# Custom Dockerfile for Spark Master with Python requests package
+
+FROM bitnami/spark:latest
+
+# Install Python and requests package
+RUN pip3 install requests
+
+# Copy the existing entrypoint script
+COPY ./src /opt/bitnami/spark/src
+
+# Command to run Spark master
+CMD ["bin/spark-class", "org.apache.spark.deploy.master.Master"]

@@ -13,4 +13,8 @@ spark = SparkSession.builder \
 
 df_employees = EmployeesDataProvider.get_employees_dataframe(spark)
 
-df_employees.show(10)
+df_team_leads_with_number_of_subordinates = (df_employees.alias("tld")
+                                             .filter(f.col("tld.lead_employee_id").isNotNull())
+                                             .groupBy("tld.lead_employee_id")
+                                             .agg(f.count("*").alias("number_of_subordinates")))
+df_team_leads_with_number_of_subordinates.show()

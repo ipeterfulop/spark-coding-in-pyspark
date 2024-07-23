@@ -10,7 +10,7 @@ class EmployeesDataProvider:
     def get_employees_dataframe(spark: SparkSession) -> DataFrame:
         return spark.createDataFrame(EmployeesDataProvider.get_employees_list(),
                                      EmployeesDataProvider.get_employees_schema())
-c
+
     @staticmethod
     def get_employees_schema() -> StructType:
         return StructType([

@@ -15,10 +15,9 @@ from pyspark.sql import SparkSession
 
 def load_movies_from_json_file(spark: SparkSession,
                                data_folder_url: str,
-                               json_file_name: str = 'movies.json'
+                               json_file_name: str = 'movies.json',
+                               load_remotely: bool = True
                                ) -> DataFrame:
-    response = requests.get(data_folder_url + json_file_name)
-    response.raise_for_status()
 
     schema_movies = StructType([
         StructField("movie_id", IntegerType(), nullable=False),
@@ -32,8 +31,17 @@ def load_movies_from_json_file(spark: SparkSession,
         StructField("runtime", IntegerType(), nullable=False)
     ])
 
-    spark_df = spark.read.schema(schema_movies).json(spark.sparkContext.parallelize([response.text]))
-    return spark_df
+    if load_remotely:
+        response = requests.get(data_folder_url + json_file_name)
+        response.raise_for_status()
+        return spark.read.schema(schema_movies).json(spark.sparkContext.parallelize([response.text]))
+    else:
+        path_to_json_file = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            json_file_name
+        )
+        return spark.read.schema(schema_movies).option("multiLine", "true").json(path_to_json_file)
+
 
 
 def load_genres_from_json_file(spark: SparkSession,

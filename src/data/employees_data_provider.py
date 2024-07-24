@@ -1,34 +1,50 @@
-from typing import List, Dict
+from typing import List, Dict, Tuple
 from pyspark.sql.types import IntegerType, StructType, StructField, FloatType, DateType, StringType
 from pyspark.sql.dataframe import DataFrame
 from pyspark.sql import SparkSession
+import pyspark.sql.functions as f
 
 
 class EmployeesDataProvider:
 
     @staticmethod
     def get_employees_dataframe(spark: SparkSession) -> DataFrame:
-        return spark.createDataFrame(EmployeesDataProvider.get_employees_list(),
-                                     EmployeesDataProvider.get_employees_schema())
+        df = spark.createDataFrame(EmployeesDataProvider.get_employees_list(),
+                                   EmployeesDataProvider.get_employees_schema())
+        df = df \
+            .withColumn("hire_date", f.to_date("hire_date", "yyyy-MM-dd")) \
+            .withColumn("birth_date", f.to_date("birth_date", "yyyy-MM-dd")) \
+            .withColumn("last_salary_review_date", f.to_date("last_salary_review_date", "yyyy-MM-dd")) \
+            .withColumn("date_of_last_medical_analysis", f.to_date("date_of_last_medical_analysis", "yyyy-MM-dd"))
+
+        return df
+
+    @staticmethod
+    def get_business_units_dataframe(spark: SparkSession) -> DataFrame:
+        df = spark.createDataFrame(EmployeesDataProvider.get_business_units_list(),
+                                   EmployeesDataProvider.get_business_units_schema())
+        df = df.withColumn("activity_start_date", f.to_date("activity_start_date", "yyyy-MM-dd"))
+
+        return df
 
     @staticmethod
     def get_employees_schema() -> StructType:
         return StructType([
-            StructField("id", StringType(), nullable=True),
+            StructField("id", IntegerType(), nullable=True),
             StructField("first_name", StringType(), nullable=True),
             StructField("middle_name", StringType(), nullable=True),
             StructField("last_name", StringType(), nullable=True),
             StructField("hire_date", StringType(), nullable=True),
             StructField("birth_date", StringType(), nullable=True),
-            StructField("business_unit_id", StringType(), nullable=True),
-            StructField("lead_employee_id", StringType(), nullable=True),
-            StructField("job_title_id", StringType(), nullable=True),
-            StructField("band_id", StringType(), nullable=True),
+            StructField("business_unit_id", IntegerType(), nullable=True),
+            StructField("lead_employee_id", IntegerType(), nullable=True),
+            StructField("job_title_id", IntegerType(), nullable=True),
+            StructField("band_id", IntegerType(), nullable=True),
             StructField("last_salary_review_date", StringType(), nullable=True),
             StructField("salary", StringType(), nullable=True),
             StructField("email_address", StringType(), nullable=True),
             StructField("gender", StringType(), nullable=True),
-            StructField("yearly_leave_days", StringType(), nullable=True),
+            StructField("yearly_leave_days", IntegerType(), nullable=True),
             StructField("personal_id_number", StringType(), nullable=True),
             StructField("date_of_last_medical_analysis", StringType(), nullable=True),
             StructField("residence_country_id", StringType(), nullable=True),
@@ -37,8 +53,16 @@ class EmployeesDataProvider:
         ])
 
     @staticmethod
-    def get_employees_list() -> List[Dict]:
-        return [
+    def get_business_units_schema() -> StructType:
+        return StructType([
+            StructField("id", IntegerType(), nullable=False),
+            StructField("name", StringType(), nullable=False),
+            StructField("activity_start_date", StringType(), nullable=False)
+        ])
+
+    @staticmethod
+    def get_employees_list() -> List[Tuple]:
+        list_of_dicts = [
             {
                 "id": 1,
                 "first_name": "Gabor",
@@ -678,3 +702,58 @@ class EmployeesDataProvider:
                 "preferred_language_id": 369
             }
         ]
+        return EmployeesDataProvider.convert_list_of_dicts_to_list_of_tuples(list_of_dicts)
+
+    @staticmethod
+    def get_business_units_list() -> List[Dict]:
+        return [
+            {
+                "id": 1,
+                "name": "Consulting 1",
+                "activity_start_date": "2010-01-15"
+            },
+            {
+                "id": 2,
+                "name": "Consulting 2",
+                "activity_start_date": "2011-02-20"
+            },
+            {
+                "id": 3,
+                "name": "Managed services",
+                "activity_start_date": "2012-03-10"
+            },
+            {
+                "id": 4,
+                "name": "Team augmentation 1",
+                "activity_start_date": "2011-04-05"
+            },
+            {
+                "id": 5,
+                "name": "Team Augmentation 2",
+                "activity_start_date": "2011-05-12"
+            },
+            {
+                "id": 6,
+                "name": "Generative AI",
+                "activity_start_date": "2023-09-09"
+            }
+        ]
+
+    @staticmethod
+    def convert_list_of_dicts_to_list_of_tuples(list_of_dicts: List[Dict]) -> List[Tuple]:
+        """
+        Convert a list of dictionaries to a list of tuples.
+
+        :param list_of_dicts: List of dictionaries
+        :return: List of tuples
+        """
+        if not list_of_dicts:
+            return []
+
+        # Get the keys from the first dictionary to maintain the order
+        keys = list_of_dicts[0].keys()
+
+        # Convert each dictionary to a tuple
+        list_of_tuples = [tuple(d[key] for key in keys) for d in list_of_dicts]
+
+        return list_of_tuples

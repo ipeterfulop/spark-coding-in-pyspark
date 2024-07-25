@@ -1,28 +1,30 @@
 # Spark coding in PySpark
 
 <!-- TOC -->
+
 * [Spark coding in PySpark](#spark-coding-in-pyspark)
-  * [1. Introduction](#1-introduction)
-  * [2. Currently covered topics](#2-currently-covered-topics)
-    * [Window Functions](#window-functions)
-  * [3. Running the Solutions](#3-running-the-solutions)
-    * [3.1 Using Databricks Community Edition](#31-using-databricks-community-edition)
-    * [3.2 Creating a local `conda` environment](#32-creating-a-local-conda-environment)
-    * [3.3 Using Apache Spark Docker containers to run pyspark programs using spark-submit](#33-using-apache-spark-docker-containers-to-run-pyspark-programs-using-spark-submit)
-      * [3.3.1 Prerequisites](#331-prerequisites)
-      * [3.3.2 The Docker container](#332-the-docker-container)
-      * [3.3.4 Building and running the Docker containers](#334-building-and-running-the-docker-containers)
-      * [3.3.5 Verify that the containers are running](#335-verify-that-the-containers-are-running)
-      * [3.3.6 Verify that the containers contains the exercise files](#336-verify-that-the-containers-contains-the-exercise-files)
-      * [3.3.7 Get the address where our spark master container is running](#337-get-the-address-where-our-spark-master-container-is-running)
-      * [3.3.8 Finding the service name of the master container](#338-finding-the-service-name-of-the-master-container)
-      * [3.3.9 Submitting a pyspark program using spark-submit command](#339-submitting-a-pyspark-program-using-spark-submit-command)
-  * [4. Miscellaneous](#4-miscellaneous)
-    * [4.1 Databricks Certified Associate Developer for Apache Spark](#41-databricks-certified-associate-developer-for-apache-spark)
-      * [4.1.1 Exam Details](#411-exam-details)
-      * [4.1.2 Minimally Qualified Candidate](#412-minimally-qualified-candidate)
-      * [4.1.3 Duration](#413-duration)
-      * [4.1.4 Questions](#414-questions)
+    * [1. Introduction](#1-introduction)
+    * [2. Currently covered topics](#2-currently-covered-topics)
+        * [Window Functions](#window-functions)
+    * [3. Running the Solutions](#3-running-the-solutions)
+        * [3.1 Using Databricks Community Edition](#31-using-databricks-community-edition)
+        * [3.2 Creating a local `conda` environment](#32-creating-a-local-conda-environment)
+        * [3.3 Using Apache Spark Docker containers to run pyspark programs using spark-submit](#33-using-apache-spark-docker-containers-to-run-pyspark-programs-using-spark-submit)
+            * [3.3.1 Prerequisites](#331-prerequisites)
+            * [3.3.2 The Docker container](#332-the-docker-container)
+            * [3.3.4 Building and running the Docker containers](#334-building-and-running-the-docker-containers)
+            * [3.3.5 Verify that the containers are running](#335-verify-that-the-containers-are-running)
+            * [3.3.6 Verify that the containers contains the exercise files](#336-verify-that-the-containers-contains-the-exercise-files)
+            * [3.3.7 Get the address where our spark master container is running](#337-get-the-address-where-our-spark-master-container-is-running)
+            * [3.3.8 Finding the service name of the master container](#338-finding-the-service-name-of-the-master-container)
+            * [3.3.9 Submitting a pyspark program using spark-submit command](#339-submitting-a-pyspark-program-using-spark-submit-command)
+    * [4. Miscellaneous](#4-miscellaneous)
+        * [4.1 Databricks Certified Associate Developer for Apache Spark](#41-databricks-certified-associate-developer-for-apache-spark)
+            * [4.1.1 Exam Details](#411-exam-details)
+            * [4.1.2 Minimally Qualified Candidate](#412-minimally-qualified-candidate)
+            * [4.1.3 Duration](#413-duration)
+            * [4.1.4 Questions](#414-questions)
+
 <!-- TOC -->
 
 ## 1. Introduction
@@ -32,25 +34,40 @@ encountered during my daily work as a Data Engineer, while others are part of my
 the [Databricks Apache Spark Developer Associate](https://www.databricks.com/learn/certification/apache-spark-developer-associate)
 certification.
 
+This repository is closely related to my [SQL essentials](https://github.com/ipeterfulop/sql-essentials-course) course
+as offer the PySpark API based solutions to the assignments mentioned in the SQL essentials course.
+
+**This repository is a work in progress**, and I will continue to add more assignments and solutions as
+I encounter new challenges. Feel free to write me if you have any questions or suggestions
+at `contact[at]peterfulop.tech`
+
 ## 2. Currently covered topics
 
+### Joins
+
+### Aggregations
+
 ### Window Functions
-  The [src/window_functions](src/window_functions) directory contains assignments and solutions
-  that demonstrate how to use window functions in PySpark.  
-  Window functions are a powerful tool for data analysis and manipulation in PySpark. They allow you to perform 
-  calculations across a set of rows related to the current row.  
-  Window functions are similar to aggregate functions, but they do not reduce the number of rows. Instead, they add a
-  new column to the DataFrame. Window functions are used to calculate running totals, moving averages, and other
-  calculations that require access to multiple rows in a DataFrame.  
-  For more information check the 
-  [Window Functions chapter](https://spark.apache.org/docs/latest/sql-ref-syntax-qry-select-window.html) of the 
-  official documentation. 
+
+The [src/window_functions](src/window_functions) directory contains assignments and solutions
+that demonstrate how to use window functions in PySpark.  
+Window functions are a powerful tool for data analysis and manipulation in PySpark. They allow you to perform
+calculations across a set of rows related to the current row.  
+Window functions are similar to aggregate functions, but they do not reduce the number of rows. Instead, they add a
+new column to the DataFrame. Window functions are used to calculate running totals, moving averages, and other
+calculations that require access to multiple rows in a DataFrame.  
+For more information check the
+[Window Functions chapter](https://spark.apache.org/docs/latest/sql-ref-syntax-qry-select-window.html) of the
+official documentation.
 
 ## 3. Running the Solutions
 
 ### 3.1 Using Databricks Community Edition
 
-All assignments and solutions are provided as Databricks Workbooks (files with .dbc extension).
+All assignments and solutions are provided as Databricks Notebooks (files with .dbc extension).  
+These notebooks can be imported into your Databricks Community Edition workspace.
+
+#### 3.1.1 Using Databricks Connect for Python
 
 ### 3.2 Creating a local `conda` environment
 
@@ -176,3 +193,13 @@ in the following way:
 * Apache Spark Architecture Concepts – 17% (10/60)
 * Apache Spark Architecture Applications – 11% (7/60)
 * Apache Spark DataFrame API Applications – 72% (43/60)
+
+### 4.2 Resources
+
+#### 4.2.1 Books
+
+* [Spark: The Definitive Guide](https://www.oreilly.com/library/view/spark-the-definitive/9781491912201/)
+  by Bill Chambers and Matei Zaharia is a comprehensive guide to Apache Spark. The book covers the core concepts of
+  Spark, including the DataFrame API, Spark SQL, and Spark Streaming. It also includes examples and best practices for
+  using Spark in production environments.
+

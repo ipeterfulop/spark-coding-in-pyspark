@@ -49,3 +49,6 @@ df_employees_with_business_units = (df_employees.alias("emp")
                                              f.col("last_name").asc(),
                                              f.col("first_name").asc()))
 df_employees_with_business_units.show()
+
+df = spark.parallelize([("a", ["x", "y", "z"]), ("b", ["p", "r"])])
+

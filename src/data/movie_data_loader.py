@@ -14,7 +14,7 @@ from pyspark.sql import SparkSession
 
 
 def load_movies_from_json_file(spark: SparkSession,
-                               data_folder_url: str,
+                               data_folder_url: str = None,
                                json_file_name: str = 'movies.json',
                                load_remotely: bool = True
                                ) -> DataFrame:

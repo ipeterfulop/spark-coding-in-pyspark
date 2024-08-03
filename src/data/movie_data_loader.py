@@ -40,6 +40,7 @@ def load_movies_from_json_file(spark: SparkSession,
             os.path.dirname(os.path.abspath(__file__)),
             json_file_name
         )
+        print(path_to_json_file)
         return spark.read.schema(schema_movies).option("multiLine", "true").json(path_to_json_file)
 
 

@@ -29,7 +29,7 @@ class PySparkUtils:
 
     @staticmethod
     def has_duplicates(df: DataFrame, *columns: List[str]) -> Dict[str, bool]:
-        duplicate_dict = {}
+        duplicates_dict = {}
 
         for col_name in columns:
             df_agg = df.select(col_name).agg(count(col_name).alias('total'), countDistinct(col_name).alias('distinct'))
@@ -37,30 +37,24 @@ class PySparkUtils:
             result = df_agg.collect()[0].asDict()
 
             # Determine if there are duplicates
-            duplicate_dict[col_name] = result['total'] > result['distinct']
+            duplicates_dict[col_name] = result['total'] > result['distinct']
 
-        return duplicate_dict
+        return duplicates_dict
 
     @staticmethod
     def covert_list_to_dataframe(list_of_objects: List[Any], context: Any) -> DataFrame:
         """
-                Converts a list of objects into a Spark DataFrame using the given Spark context.
+        Converts a list of objects into a Spark DataFrame using the given Spark context.
 
-                :param list_of_objects: A list containing objects that will form the rows of the DataFrame.
-                :type list_of_objects: List[Any]
-                :param context: The Spark context used to create the DataFrame.
-                :type context: SparkSession
-                :return: A DataFrame where each object from the list becomes a row.
-                :rtype: DataFrame
-                :raises TypeError: If the input is not a list.
+        :param list_of_objects: A list containing objects that will form the rows of the DataFrame.
+        :type list_of_objects: List[Any]
+        :param context: The Spark context used to create the DataFrame.
+        :type context: SparkSession
+        :return: A DataFrame where each object from the list becomes a row.
+        :rtype: DataFrame
+        :raises TypeError: If the input is not a list.
 
-                Example:
-                    >>> from pyspark.sql import SparkSession
-                    >>> spark = SparkSession.builder.appName("Example").getOrCreate()
-                    >>> data = ["apple", "banana", "cherry"]
-                    >>> df = MaintenanceUtils.convert_to_dataframe(data, spark)
-                    >>> df.show()
-                """
+        """
 
         if not isinstance(list_of_objects, List):
             raise TypeError("list_of_objects must be a list")
@@ -78,6 +72,12 @@ class PySparkUtils:
         data = [tuple(str(dict_of_objects[col]) for col in columns)]
 
         return context.createDataFrame(data, schema)
+
+    @staticmethod
+    def are_dataframes_equal(df1: DataFrame, df2: DataFrame) -> bool:
+        return df1.schema == df2.schema \
+            and df1.count() == df2.count() \
+            and (diff_df := df1.subtract(df2).union(df2.subtract(df1))).count() == 0
 
 
 class ExtendedDataFrame(DataFrame):

@@ -1,5 +1,6 @@
 # Spark coding in PySpark
 
+![Cover](assets/cover_spark_pyspark.png)
 <!-- TOC -->
 
 * [Spark coding in PySpark](#spark-coding-in-pyspark)
@@ -84,7 +85,7 @@ environment for Spark applications, resulting in more efficient development and 
 * Familiarity with docker-compose files.
 
 #### 3.3.2 The Docker container
-
+![Docker](assets/docker.png)
 Here is the [docker-compose](docker-compose.yaml) yaml file that we will use to run the Apache Spark cluster.  
 This setup utilizes the `bitnami/spark` image. You can scale by adding more workers and adjust the `SPARK_WORKER_CORES`
 and `SPARK_WORKER_MEMORY` environment variables to match your system’s specifications.

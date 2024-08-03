@@ -1,6 +1,7 @@
 # Spark coding in PySpark
 
-![Cover](assets/cover_spark_pyspark.png)
+![Cover](assets/cover_spark_pyspark_1.png)
+
 <!-- TOC -->
 
 * [Spark coding in PySpark](#spark-coding-in-pyspark)
